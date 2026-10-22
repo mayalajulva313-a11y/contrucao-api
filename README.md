@@ -1,6 +1,11 @@
 # Catalogo de Produtos
 
 API REST e interface web para consultar e gerenciar produtos. O catalogo inclui imagem, caracteristicas, sabor, cores, preco e data de vencimento.
+![](https://github.com/mayalajulva313-a11y/contrucao-api/blob/main/Screenshots/tela%206.png)
+![](https://github.com/mayalajulva313-a11y/contrucao-api/blob/main/Screenshots/tela%205.png)
+![](https://github.com/mayalajulva313-a11y/contrucao-api/blob/main/Screenshots/tela%204.png)
+![](https://github.com/mayalajulva313-a11y/contrucao-api/blob/main/Screenshots/tela%203.png)
+![](https://github.com/mayalajulva313-a11y/contrucao-api/blob/main/Screenshots/tela%202.png)
 
 ## Executar
 
