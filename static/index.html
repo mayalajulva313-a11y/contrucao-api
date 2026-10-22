@@ -1,0 +1,884 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f5ef">
+  <title>Produtos | SENAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f4f5ef;
+      --white: #fff;
+      --ink: #19241f;
+      --muted: #707b74;
+      --line: #dce2da;
+      --green: #176b4a;
+      --green-dark: #105239;
+      --mint: #dceee3;
+      --orange: #ba542f;
+      --orange-pale: #fae9df;
+      --shadow: 0 16px 40px rgb(29 51 39 / 7%);
+      font-family: "DM Sans", sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100vh;
+      background:
+        linear-gradient(rgb(244 245 239 / 86%), rgb(244 245 239 / 90%)),
+        url("https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=700&q=80"),
+        url("https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?auto=format&fit=crop&w=700&q=80"),
+        url("https://images.unsplash.com/photo-1587049352851-8d4e89133924?auto=format&fit=crop&w=700&q=80"),
+        url("https://images.unsplash.com/photo-1550258987-190a2d41a8ba?auto=format&fit=crop&w=700&q=80");
+      background-size: auto, 260px 190px, 260px 190px, 260px 190px, 260px 190px;
+      background-position: center, 3% 22%, 96% 24%, 4% 84%, 96% 86%;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+
+    .topbar {
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 max(24px, calc((100vw - 1120px) / 2));
+      border-bottom: 1px solid rgb(25 36 31 / 9%);
+      background: rgb(255 255 255 / 68%);
+    }
+
+    .brand { display: flex; align-items: center; gap: 11px; }
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 9px 9px 9px 2px;
+      background: var(--green);
+      color: var(--white);
+      font-family: "Manrope", sans-serif;
+      font-size: 17px;
+      font-weight: 800;
+    }
+    .brand-name {
+      font-family: "Manrope", sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+    }
+    .brand-caption {
+      margin-top: 1px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+    .api-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .header-actions { display: flex; align-items: center; gap: 20px; }
+    .docs-link { color: var(--green); font-size: 12px; font-weight: 700; text-decoration: none; }
+    .docs-link:hover { color: var(--green-dark); text-decoration: underline; }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #3b9c69;
+      box-shadow: 0 0 0 3px var(--mint);
+    }
+
+    main {
+      width: min(100% - 40px, 1120px);
+      margin: 0 auto;
+      padding: 56px 0 72px;
+    }
+    .page-heading {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 30px;
+      animation: rise-in 420ms ease both;
+    }
+    .eyebrow {
+      margin: 0 0 9px;
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+    }
+    h1 {
+      margin: 0;
+      font-family: "Manrope", sans-serif;
+      font-size: 34px;
+      font-weight: 700;
+      line-height: 1.15;
+    }
+    .summary {
+      display: flex;
+      align-items: baseline;
+      gap: 9px;
+      padding: 11px 15px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgb(255 255 255 / 62%);
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .summary strong {
+      color: var(--ink);
+      font-family: "Manrope", sans-serif;
+      font-size: 18px;
+    }
+
+    .workspace-tabs {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+    .tab-button {
+      position: relative;
+      min-height: 44px;
+      padding: 0 17px;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .tab-button[aria-selected="true"] { color: var(--green); }
+    .tab-button[aria-selected="true"]::after {
+      position: absolute;
+      right: 10px;
+      bottom: -1px;
+      left: 10px;
+      height: 3px;
+      border-radius: 3px 3px 0 0;
+      background: var(--green);
+      content: "";
+    }
+    .tab-button:focus-visible { outline: 2px solid var(--green); outline-offset: -3px; }
+    .tab-panel { animation: rise-in 280ms ease both; }
+    .search-tools {
+      display: flex;
+      justify-content: flex-end;
+      padding: 0 0 18px;
+    }
+    .search-label { width: min(100%, 360px); }
+    .register-panel {
+      max-width: 760px;
+      padding: 21px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgb(255 255 255 / 94%);
+      box-shadow: var(--shadow);
+    }
+    .register-heading { margin: 0 0 17px; font-family: "Manrope", sans-serif; font-size: 17px; }
+    .product-form { padding: 4px 13px 14px; }
+    .register-panel .product-form { padding: 0; }
+    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .form-field { min-width: 0; }
+    .form-field.full { grid-column: 1 / -1; }
+    .form-field label {
+      display: block;
+      margin-bottom: 5px;
+      color: #4f5c54;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .form-field input { height: 38px; font-size: 12px; }
+    .form-actions { display: flex; justify-content: flex-end; margin-top: 12px; }
+    .register-panel .form-actions { margin-top: 18px; }
+    .field-label {
+      display: block;
+      margin-bottom: 8px;
+      color: #4f5c54;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    input {
+      width: 100%;
+      height: 42px;
+      padding: 0 12px;
+      border: 1px solid #cfd8cf;
+      border-radius: 6px;
+      outline: none;
+      background: var(--white);
+      color: var(--ink);
+      transition: border-color 150ms ease, box-shadow 150ms ease;
+    }
+    input::placeholder { color: #9aa39d; }
+    input:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgb(23 107 74 / 12%);
+    }
+    .search-label { position: relative; align-self: center; }
+    .search-label input { padding-left: 37px; }
+    .search-symbol {
+      position: absolute;
+      top: 11px;
+      left: 13px;
+      width: 14px;
+      height: 14px;
+      border: 1.7px solid #79857d;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .search-symbol::after {
+      position: absolute;
+      right: -5px;
+      bottom: -3px;
+      width: 6px;
+      height: 1.7px;
+      transform: rotate(48deg);
+      background: #79857d;
+      content: "";
+    }
+    .primary-button {
+      min-height: 42px;
+      padding: 0 16px;
+      border: 1px solid var(--green);
+      border-radius: 6px;
+      background: var(--green);
+      color: white;
+      font-size: 13px;
+      font-weight: 700;
+      transition: background 150ms ease, transform 150ms ease;
+    }
+    .primary-button:hover { background: var(--green-dark); }
+    .primary-button:active { transform: translateY(1px); }
+    .primary-button:disabled { cursor: wait; opacity: .65; }
+
+    .list-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 30px 0 12px;
+    }
+    .list-heading h2 {
+      margin: 0;
+      font-family: "Manrope", sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+    }
+    .list-hint { color: var(--muted); font-size: 12px; }
+    .table-shell {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+      animation: rise-in 560ms ease 130ms both;
+    }
+    .price-table { width: 100%; min-width: 1120px; border-collapse: collapse; text-align: left; }
+    .price-table thead { background: #f8faf7; }
+    .price-table th {
+      height: 43px;
+      padding: 0 12px;
+      color: #748078;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .6px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .price-table td { padding: 10px 12px; border-top: 1px solid #edf0eb; font-size: 12px; vertical-align: middle; }
+    .price-table tbody tr { transition: background 130ms ease; }
+    .price-table tbody tr:hover { background: #fafcf9; }
+    .product-cell { display: flex; min-width: 145px; align-items: center; gap: 9px; }
+    .product-thumb, .thumb-fallback { width: 46px; height: 46px; flex: 0 0 46px; border-radius: 6px; object-fit: cover; }
+    .thumb-fallback { display: grid; place-items: center; background: var(--mint); color: var(--green); font-family: "Manrope", sans-serif; font-size: 19px; font-weight: 800; }
+    .product-cell-name { color: var(--ink); font-weight: 700; }
+    .product-id {
+      color: #818b84;
+      font-family: "Manrope", sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .table-copy { max-width: 170px; color: #46534b; line-height: 1.45; }
+    .color-list { display: flex; flex-wrap: wrap; gap: 5px; min-width: 95px; }
+    .color-chip { display: inline-flex; align-items: center; gap: 5px; padding: 4px 7px; border: 1px solid #e5e9e3; border-radius: 20px; color: #59645d; font-size: 10px; white-space: nowrap; }
+    .color-dot { width: 9px; height: 9px; border: 1px solid rgb(0 0 0 / 12%); border-radius: 50%; }
+    .price-cell { color: var(--green); font-family: "Manrope", sans-serif; font-size: 14px !important; font-weight: 800; white-space: nowrap; }
+    .table-actions { display: flex; justify-content: flex-end; gap: 3px; }
+    .expiry-date { display: block; color: #3f4b43; white-space: nowrap; }
+    .expiry-status { display: block; margin-top: 4px; color: #47744e; font-size: 10px; white-space: nowrap; }
+    .expiry-status.warning { color: #a56819; }
+    .expiry-status.expired { color: #b44732; font-weight: 700; }
+    .text-button {
+      min-height: 32px;
+      padding: 0 10px;
+      border: 1px solid transparent;
+      border-radius: 5px;
+      background: transparent;
+      color: #526057;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .text-button:hover { border-color: var(--line); background: #f7f9f6; }
+    .text-button.danger { color: var(--orange); }
+    .text-button.danger:hover { border-color: #f1d3c6; background: var(--orange-pale); }
+    .inline-edit { display: flex; gap: 7px; }
+    .edit-dialog {
+      width: min(560px, calc(100% - 28px));
+      max-height: min(90vh, 760px);
+      overflow-y: auto;
+      padding: 0;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--paper);
+      color: var(--ink);
+      box-shadow: 0 24px 80px rgb(15 31 22 / 25%);
+    }
+    .edit-dialog::backdrop { background: rgb(18 31 24 / 48%); }
+    .dialog-content { padding: 22px; }
+    .dialog-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+    .dialog-heading h2 { margin: 0; font-family: "Manrope", sans-serif; font-size: 20px; }
+    .dialog-heading p { margin: 5px 0 0; color: var(--muted); font-size: 12px; }
+    .dialog-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; }
+    .secondary-button { min-height: 40px; padding: 0 13px; border: 1px solid var(--line); border-radius: 6px; background: white; color: var(--ink); font-size: 12px; font-weight: 700; }
+    .inline-edit input { height: 36px; }
+    .empty-state {
+      padding: 52px 20px;
+      border-top: 1px solid #edf0eb;
+      color: var(--muted);
+      text-align: center;
+      font-size: 13px;
+    }
+    .empty-state strong {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--ink);
+      font-family: "Manrope", sans-serif;
+      font-size: 15px;
+    }
+    .notice {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      z-index: 2;
+      max-width: min(420px, calc(100vw - 32px));
+      padding: 13px 17px;
+      border: 1px solid #c9dfd0;
+      border-radius: 7px;
+      background: #eff8f1;
+      color: #205d3c;
+      box-shadow: var(--shadow);
+      font-size: 13px;
+      animation: rise-in 180ms ease both;
+    }
+    .notice.error { border-color: #efcdbf; background: #fff4ef; color: #9b4025; }
+    [hidden] { display: none !important; }
+
+    @keyframes rise-in {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 680px) {
+      .topbar { height: 60px; padding: 0 18px; }
+      main { width: min(100% - 32px, 1120px); padding-top: 37px; }
+      .page-heading { align-items: flex-start; flex-direction: column; gap: 15px; }
+      h1 { font-size: 29px; }
+      .list-hint { display: none; }
+      .table-shell { margin-right: -1px; }
+      .tab-button { flex: 1; padding: 0 8px; }
+      .register-panel { padding: 17px; }
+    }
+    @media (max-width: 420px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .form-field.full { grid-column: auto; }
+      .summary { padding: 9px 11px; }
+      .dialog-content { padding: 18px 15px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand" aria-label="SENAI, gestão">
+      <div class="brand-mark" aria-hidden="true">S</div>
+      <div>
+        <div class="brand-name">SENAI</div>
+        <div class="brand-caption">Gestao de produtos</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="api-status"><span class="status-dot" aria-hidden="true"></span>API conectada</div>
+      <a class="docs-link" href="/docs">Documentacao da API</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-heading" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">Catalogo</p>
+        <h1 id="page-title">Produtos</h1>
+      </div>
+      <div class="summary"><strong id="product-count">0</strong><span>produtos cadastrados</span></div>
+    </section>
+
+    <nav class="workspace-tabs" role="tablist" aria-label="Catalogo de produtos">
+      <button class="tab-button" id="search-tab" type="button" role="tab" aria-selected="true" aria-controls="search-panel" tabindex="0">Buscar produtos</button>
+      <button class="tab-button" id="register-tab" type="button" role="tab" aria-selected="false" aria-controls="register-panel" tabindex="-1">Cadastrar produto</button>
+    </nav>
+
+    <section class="tab-panel" id="search-panel" role="tabpanel" aria-labelledby="search-tab" tabindex="0">
+      <div class="search-tools">
+        <label class="search-label">
+          <span class="field-label">Buscar no catalogo</span>
+          <span class="search-symbol" aria-hidden="true"></span>
+          <input id="search" type="search" placeholder="Nome, sabor ou ID" autocomplete="off">
+        </label>
+      </div>
+      <section aria-labelledby="list-title">
+        <div class="list-heading">
+          <h2 id="list-title">Tabela de precos: menor para maior</h2>
+          <span id="list-hint" class="list-hint">Carregando catalogo...</span>
+        </div>
+        <div class="table-shell" id="product-table-shell">
+          <table class="price-table">
+            <thead>
+              <tr>
+                <th scope="col">Produto</th>
+                <th scope="col">Caracteristicas</th>
+                <th scope="col">Sabor</th>
+                <th scope="col">Cores</th>
+                <th scope="col">Vencimento</th>
+                <th scope="col">Preco (R$)</th>
+                <th scope="col">Acoes</th>
+              </tr>
+            </thead>
+            <tbody id="product-list"></tbody>
+          </table>
+        </div>
+        <div class="table-shell" id="empty-shell" hidden>
+          <div id="empty-state" class="empty-state" hidden>
+            <strong>Nenhum produto encontrado</strong>
+            <span>Tente outra busca ou adicione um produto ao catalogo.</span>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <section class="tab-panel register-panel" id="register-panel" role="tabpanel" aria-labelledby="register-tab" tabindex="0" hidden>
+      <h2 class="register-heading">Cadastrar produto</h2>
+      <form id="create-form" class="product-form">
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="new-description">Nome</label>
+            <input id="new-description" name="descricao" maxlength="100" placeholder="Ex.: Pera" required>
+          </div>
+          <div class="form-field">
+            <label for="new-price">Preco (R$)</label>
+            <input id="new-price" name="preco" type="number" min="0.01" max="1000000" step="0.01" placeholder="0,00" required>
+          </div>
+          <div class="form-field">
+            <label for="new-expiry">Data de vencimento</label>
+            <input id="new-expiry" name="data_vencimento" type="date" required>
+          </div>
+          <div class="form-field">
+            <label for="new-characteristics">Caracteristicas</label>
+            <input id="new-characteristics" name="caracteristicas" maxlength="250" placeholder="Textura, origem, nutrientes..." required>
+          </div>
+          <div class="form-field">
+            <label for="new-taste">Sabor</label>
+            <input id="new-taste" name="sabor" maxlength="120" placeholder="Doce, citrico..." required>
+          </div>
+          <div class="form-field">
+            <label for="new-colors">Cores</label>
+            <input id="new-colors" name="cores" placeholder="Verde, amarelo" required>
+          </div>
+          <div class="form-field">
+            <label for="new-image">Imagem (URL)</label>
+            <input id="new-image" name="imagem" type="url" placeholder="https://..." required>
+          </div>
+        </div>
+        <div class="form-actions"><button class="primary-button" type="submit">Salvar produto</button></div>
+      </form>
+    </section>
+  </main>
+
+  <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+  <dialog class="edit-dialog" id="edit-dialog" aria-labelledby="edit-title">
+    <div class="dialog-content">
+      <div class="dialog-heading">
+        <div><h2 id="edit-title">Editar produto</h2><p>Atualize as informacoes do item.</p></div>
+      </div>
+      <form id="edit-form" class="product-form">
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="edit-description">Nome</label>
+            <input id="edit-description" name="descricao" maxlength="100" required>
+          </div>
+          <div class="form-field">
+            <label for="edit-price">Preco (R$)</label>
+            <input id="edit-price" name="preco" type="number" min="0.01" max="1000000" step="0.01" required>
+          </div>
+          <div class="form-field">
+            <label for="edit-expiry">Data de vencimento</label>
+            <input id="edit-expiry" name="data_vencimento" type="date" required>
+          </div>
+          <div class="form-field">
+            <label for="edit-characteristics">Caracteristicas</label>
+            <input id="edit-characteristics" name="caracteristicas" maxlength="250" required>
+          </div>
+          <div class="form-field">
+            <label for="edit-taste">Sabor</label>
+            <input id="edit-taste" name="sabor" maxlength="120" required>
+          </div>
+          <div class="form-field">
+            <label for="edit-colors">Cores</label>
+            <input id="edit-colors" name="cores" required>
+          </div>
+          <div class="form-field">
+            <label for="edit-image">Imagem (URL)</label>
+            <input id="edit-image" name="imagem" type="url" required>
+          </div>
+        </div>
+        <div class="dialog-actions">
+          <button class="secondary-button" id="cancel-edit" type="button">Cancelar</button>
+          <button class="primary-button" type="submit">Salvar alteracoes</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <script>
+    const productList = document.querySelector("#product-list");
+    const productTableShell = document.querySelector("#product-table-shell");
+    const productCount = document.querySelector("#product-count");
+    const listHint = document.querySelector("#list-hint");
+    const emptyState = document.querySelector("#empty-state");
+    const emptyShell = document.querySelector("#empty-shell");
+    const searchInput = document.querySelector("#search");
+    const createForm = document.querySelector("#create-form");
+    const editForm = document.querySelector("#edit-form");
+    const editDialog = document.querySelector("#edit-dialog");
+    const notice = document.querySelector("#notice");
+    const tabs = [...document.querySelectorAll('[role="tab"]')];
+    const panels = tabs.map((tab) => document.getElementById(tab.getAttribute("aria-controls")));
+    let products = [];
+    let editingProductId = null;
+    let noticeTimeout;
+
+    function activateTab(activeTab, moveFocus = false) {
+      tabs.forEach((tab, index) => {
+        const isActive = tab === activeTab;
+        tab.setAttribute("aria-selected", String(isActive));
+        tab.tabIndex = isActive ? 0 : -1;
+        panels[index].hidden = !isActive;
+      });
+      if (moveFocus) activeTab.focus();
+    }
+
+    for (const [index, tab] of tabs.entries()) {
+      tab.addEventListener("click", () => activateTab(tab));
+      tab.addEventListener("keydown", (event) => {
+        let nextIndex;
+        if (event.key === "ArrowRight") nextIndex = (index + 1) % tabs.length;
+        if (event.key === "ArrowLeft") nextIndex = (index - 1 + tabs.length) % tabs.length;
+        if (event.key === "Home") nextIndex = 0;
+        if (event.key === "End") nextIndex = tabs.length - 1;
+        if (nextIndex !== undefined) {
+          event.preventDefault();
+          activateTab(tabs[nextIndex], true);
+        }
+      });
+    }
+
+    async function request(path, options = {}) {
+      const response = await fetch(path, {
+        ...options,
+        headers: { "Content-Type": "application/json", ...options.headers },
+      });
+      const body = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        const detail = typeof body.detail === "string" ? body.detail : "Nao foi possivel concluir a operacao.";
+        throw new Error(detail);
+      }
+      return body;
+    }
+
+    function showNotice(message, isError = false) {
+      clearTimeout(noticeTimeout);
+      notice.textContent = message;
+      notice.classList.toggle("error", isError);
+      notice.hidden = false;
+      noticeTimeout = setTimeout(() => { notice.hidden = true; }, 3400);
+    }
+
+    function renderProducts() {
+      const query = searchInput.value.trim().toLocaleLowerCase("pt-BR");
+      const visibleProducts = [...products]
+        .sort((first, second) => first.preco - second.preco || first.id - second.id)
+        .filter((product) =>
+        [
+          product.descricao,
+          product.caracteristicas,
+          product.sabor,
+          ...product.cores,
+          product.data_vencimento,
+          String(product.id),
+        ].some((value) => value.toLocaleLowerCase("pt-BR").includes(query)),
+      );
+
+      productCount.textContent = String(products.length);
+      listHint.textContent = query
+        ? `${visibleProducts.length} resultado${visibleProducts.length === 1 ? "" : "s"}`
+        : "Ordenado pelo menor preco";
+      productList.replaceChildren(...visibleProducts.map(createProductRow));
+      productTableShell.hidden = visibleProducts.length === 0;
+      emptyShell.hidden = visibleProducts.length > 0;
+      emptyState.hidden = false;
+    }
+
+    function createProductRow(product) {
+      const row = document.createElement("tr");
+      const productCell = document.createElement("td");
+      const productContent = document.createElement("div");
+      const image = document.createElement("img");
+      const fallback = document.createElement("span");
+      const id = document.createElement("span");
+      const name = document.createElement("span");
+      const characteristics = document.createElement("td");
+      const taste = document.createElement("td");
+      const colorsCell = document.createElement("td");
+      const expiryCell = document.createElement("td");
+      const priceCell = document.createElement("td");
+      const actionsCell = document.createElement("td");
+      const actions = document.createElement("div");
+
+      productContent.className = "product-cell";
+      image.className = "product-thumb";
+      image.src = product.imagem;
+      image.alt = product.descricao;
+      image.loading = "lazy";
+      image.addEventListener("error", () => image.replaceWith(fallback), { once: true });
+      fallback.className = "thumb-fallback";
+      fallback.textContent = product.descricao.slice(0, 1).toLocaleUpperCase("pt-BR");
+      id.className = "product-id";
+      id.textContent = `#${product.id}`;
+      name.className = "product-cell-name";
+      name.textContent = product.descricao;
+      const productName = document.createElement("div");
+      productName.append(id, document.createElement("br"), name);
+      productContent.append(image, productName);
+      productCell.append(productContent);
+
+      const colorList = document.createElement("div");
+      colorList.className = "color-list";
+      for (const color of product.cores) {
+        const chip = document.createElement("span");
+        const dot = document.createElement("span");
+        chip.className = "color-chip";
+        chip.title = color;
+        dot.className = "color-dot";
+        dot.style.backgroundColor = colorHex(color);
+        dot.setAttribute("aria-hidden", "true");
+        chip.append(dot, document.createTextNode(color));
+        colorList.append(chip);
+      }
+      colorsCell.append(colorList);
+
+      characteristics.className = "table-copy";
+      characteristics.textContent = product.caracteristicas;
+      taste.className = "table-copy";
+      taste.textContent = product.sabor;
+
+      const expiry = document.createElement("span");
+      const expiryStatus = document.createElement("span");
+      const daysUntilExpiry = Math.ceil(
+        (new Date(`${product.data_vencimento}T00:00:00Z`) - new Date(new Date().toISOString().slice(0, 10) + "T00:00:00Z"))
+        / 86400000,
+      );
+      expiry.className = "expiry-date";
+      expiry.textContent = formatDate(product.data_vencimento);
+      expiryStatus.className = "expiry-status";
+      if (daysUntilExpiry < 0) {
+        expiryStatus.classList.add("expired");
+        expiryStatus.textContent = "Vencido";
+      } else if (daysUntilExpiry === 0) {
+        expiryStatus.classList.add("warning");
+        expiryStatus.textContent = "Vence hoje";
+      } else if (daysUntilExpiry <= 7) {
+        expiryStatus.classList.add("warning");
+        expiryStatus.textContent = `Vence em ${daysUntilExpiry} dias`;
+      } else {
+        expiryStatus.textContent = "Dentro da validade";
+      }
+      expiryCell.append(expiry, expiryStatus);
+
+      priceCell.className = "price-cell";
+      priceCell.textContent = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(product.preco);
+
+      actions.className = "table-actions";
+      actions.append(
+        makeButton("Editar", "text-button", () => openEditor(product)),
+        makeButton("Excluir", "text-button danger", () => deleteProduct(product)),
+      );
+      actionsCell.append(actions);
+      row.append(productCell, characteristics, taste, colorsCell, expiryCell, priceCell, actionsCell);
+      return row;
+    }
+
+    function formatDate(date) {
+      return new Intl.DateTimeFormat("pt-BR", { timeZone: "UTC" }).format(new Date(`${date}T00:00:00Z`));
+    }
+
+    function colorHex(color) {
+      const colors = {
+        amarelo: "#e5c044", azul: "#4a82bd", branco: "#f7f7f2",
+        marrom: "#916647", laranja: "#e58a3b", roxo: "#8b69a8",
+        rosa: "#df91a1", verde: "#5d9a62", vermelho: "#d45e53",
+      };
+      return colors[color.toLocaleLowerCase("pt-BR")] || "#9ba69e";
+    }
+
+    function makeButton(label, className, action) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = className;
+      button.textContent = label;
+      button.addEventListener("click", action);
+      return button;
+    }
+
+    function openEditor(product) {
+      editingProductId = product.id;
+      for (const field of editForm.elements) {
+        if (!field.name) continue;
+        field.value = field.name === "cores" ? product.cores.join(", ") : product[field.name];
+      }
+      editDialog.showModal();
+      editForm.elements.namedItem("descricao").focus();
+    }
+
+    function readProductForm(form) {
+      const values = new FormData(form);
+      const cores = String(values.get("cores"))
+        .split(",")
+        .map((color) => color.trim())
+        .filter(Boolean);
+      const product = {
+        descricao: String(values.get("descricao")).trim(),
+        caracteristicas: String(values.get("caracteristicas")).trim(),
+        sabor: String(values.get("sabor")).trim(),
+        cores,
+        preco: Number(values.get("preco")),
+        data_vencimento: String(values.get("data_vencimento")),
+        imagem: String(values.get("imagem")).trim(),
+      };
+      if (!product.descricao || !product.caracteristicas || !product.sabor || !product.imagem || !product.data_vencimento) {
+        throw new Error("Preencha todos os campos do produto.");
+      }
+      if (cores.length === 0 || cores.length > 5) {
+        throw new Error("Informe de uma a cinco cores, separadas por virgula.");
+      }
+      if (!Number.isFinite(product.preco) || product.preco <= 0) {
+        throw new Error("O preco deve ser maior que zero.");
+      }
+      return product;
+    }
+
+    async function loadProducts() {
+      try {
+        products = await request("/produtos");
+        renderProducts();
+      } catch (error) {
+        listHint.textContent = "Falha ao carregar";
+        productTableShell.hidden = true;
+        emptyShell.hidden = false;
+        emptyState.hidden = false;
+        emptyState.querySelector("strong").textContent = "Nao foi possivel carregar os produtos";
+        emptyState.querySelector("span").textContent = error.message;
+        showNotice(error.message, true);
+      }
+    }
+
+    createForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      let product;
+      try {
+        product = readProductForm(createForm);
+      } catch (error) {
+        showNotice(error.message, true);
+        return;
+      }
+      const submitButton = createForm.querySelector("button[type='submit']");
+      submitButton.disabled = true;
+      try {
+        await request("/produtos", {
+          method: "POST",
+          body: JSON.stringify(product),
+        });
+        createForm.reset();
+        await loadProducts();
+        activateTab(document.querySelector("#search-tab"));
+        showNotice("Produto adicionado.");
+      } catch (error) {
+        showNotice(error.message, true);
+      } finally {
+        submitButton.disabled = false;
+      }
+    });
+
+    editForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      let product;
+      try {
+        product = readProductForm(editForm);
+      } catch (error) {
+        showNotice(error.message, true);
+        return;
+      }
+      try {
+        await request(`/produtos/${editingProductId}`, {
+          method: "PUT",
+          body: JSON.stringify(product),
+        });
+        editDialog.close();
+        await loadProducts();
+        showNotice("Produto atualizado.");
+      } catch (error) {
+        showNotice(error.message, true);
+      }
+    });
+
+    document.querySelector("#cancel-edit").addEventListener("click", () => editDialog.close());
+
+    async function deleteProduct(product) {
+      if (!window.confirm(`Excluir o produto "${product.descricao}"?`)) return;
+      try {
+        await request(`/produtos/${product.id}`, { method: "DELETE" });
+        products = products.filter((item) => item.id !== product.id);
+        renderProducts();
+        showNotice("Produto excluido.");
+      } catch (error) {
+        showNotice(error.message, true);
+      }
+    }
+
+    searchInput.addEventListener("input", renderProducts);
+    loadProducts();
+  </script>
+</body>
+</html>
